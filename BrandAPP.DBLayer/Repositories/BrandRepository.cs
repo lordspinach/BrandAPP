@@ -19,12 +19,12 @@ namespace BrandAPP.DBLayer.Repositories
 
         public IEnumerable<BrandDb> GetAll()
         {
-            return _context.Brands.Include(s => s.Sizes).ToList();
+            return _context.Brands.Where(s => s.IsDeleted == false).Include(s => s.Sizes).ToList();
         }
 
         public BrandDb Get(int id)
         {
-            return _context.Brands.Include(s => s.Sizes).Where(s => s.Id == id).FirstOrDefault();
+            return _context.Brands.Include(s => s.Sizes).Where(s => s.IsDeleted == false).Where(s => s.Id == id).FirstOrDefault();
         }
 
         public void Create(BrandDb brand)
@@ -32,9 +32,11 @@ namespace BrandAPP.DBLayer.Repositories
             _context.Brands.Add(brand);
         }
 
-        public void Update(BrandDb brand)
+        public void Update(int id, BrandDb brand)
         {
+            brand.Id = id;
             _context.Entry(brand).State = EntityState.Modified;
+            
         }
 
         public IEnumerable<BrandDb> Find(Func<BrandDb, Boolean> predicate)
@@ -44,14 +46,21 @@ namespace BrandAPP.DBLayer.Repositories
 
         public BrandDb FindByName(string name)
         {
-            return _context.Brands.Include(i => i.Sizes).FirstOrDefault(x => x.Name == name);
+            return _context.Brands.Where(s => s.IsDeleted == false).Include(i => i.Sizes).FirstOrDefault(x => x.Name == name);
         }
 
         public void Delete(int id)
         {
-            BrandDb brand = _context.Brands.Find(id);
+            var brand = _context.Brands.Where(s => s.IsDeleted == false).Where(s => s.Id == id).FirstOrDefault();
             if(brand != null)
-                _context.Brands.Remove(brand);
+            {
+                _context.Entry(brand).State = EntityState.Deleted;
+            }
+        }
+
+        public bool AnyId(int id)
+        {
+            return _context.Brands.Any(s => s.Id == id);
         }
     }
 }

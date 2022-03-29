@@ -11,6 +11,7 @@ namespace BrandAPP.API.MappingProfiles
         {
             CreateMap<BrandDTO, BrandResponse>().ReverseMap(); 
             CreateMap<BrandCreateRequest, BrandDTO>().ReverseMap();
+            CreateMap<BrandUpdateRequest, BrandDTO>().ReverseMap();
         }
     }
 }

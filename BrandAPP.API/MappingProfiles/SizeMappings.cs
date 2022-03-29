@@ -11,6 +11,7 @@ namespace BrandAPP.API.MappingProfiles
         {
             CreateMap<SizeDTO, SizeResponse>().ReverseMap();
             CreateMap<SizeDTO, SizeCreateRequest>().ReverseMap();
+            CreateMap<SizeDTO, SizeUpdateRequest>().ReverseMap();
         }
     }
 }

@@ -55,5 +55,37 @@ namespace BrandAPP.API.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdateSize(int id, SizeUpdateRequest size)
+        {
+            try
+            {
+                _brandService.UpdateSize(id, _mapper.Map<SizeDTO>(size));
+                return Ok(new { Message = "Size was succesfully updated" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _brandService.DeleteSize(id);
+                return Ok(new { Message = "Size was succesfully deleted" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -9,10 +9,10 @@ namespace BrandAPP.BLLayer.Services
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddApplicationContext(this IServiceCollection services)
+        public static void AddApplicationContext(this IServiceCollection services, string connectionString)
         {
             services.AddDbContext<ApplicationContext>(
-                options => options.UseNpgsql("Host=localhost;Database=BrandsAndProducts;Username=postgres;Password=password",
+                options => options.UseNpgsql(connectionString,
                 x => x.MigrationsAssembly("BrandAPP.DBLayer")));
         }
         public static void AddDbDependency(this IServiceCollection services)

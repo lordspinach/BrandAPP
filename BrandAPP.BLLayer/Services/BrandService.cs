@@ -30,12 +30,25 @@ namespace BrandAPP.BLLayer.Services
             _database.Save();
         }
 
+        public void UpdateBrand(int id, BrandDTO brand)
+        {
+            if (_database.Brands.AnyId(id))
+            {
+                _database.Brands.Update(id, _mapper.Map<BrandDb>(brand));
+                _database.Save();
+            }
+            else
+            {
+                throw new ValidationException($"There is no brand with ID = {id}");
+            }
+        }
+
         public BrandDTO GetBrand(int id)
         {
             var brand = _mapper.Map<BrandDTO>(_database.Brands.Get(id));
             if (brand == null)
             {
-                throw new ValidationException($"There is no brand with ID = {id}", "");
+                throw new ValidationException($"There is no brand with ID = {id}");
             }
             return brand;
         }
@@ -44,17 +57,24 @@ namespace BrandAPP.BLLayer.Services
         {
             var brandDb = _database.Brands.FindByName(name);
             if(brandDb == null)
-                throw new ValidationException($"There is no brand with Name = {name}", "");
+                throw new ValidationException($"There is no brand with Name = {name}");
 
             return _mapper.Map<BrandDTO>(brandDb);
         }
 
-        public bool AddSize(int brandId, SizeDTO sizeDto)
+        public void AddSize(int brandId, SizeDTO sizeDto)
         {
             var brand = _database.Brands.Get(brandId);
             if(brand == null)
             {
-                throw new ValidationException($"There is no brand with ID = {sizeDto.BrandId}", "");
+                throw new ValidationException($"There is no brand with ID = {brandId}");
+            }
+            foreach(var brandSize in brand.Sizes)
+            {
+                if (brandSize.RFSize == sizeDto.RFSize)
+                {
+                    throw new ValidationException($"This RFSize = {sizeDto.RFSize} already exist in the brand");
+                }
             }
                 
             var size = _mapper.Map<SizeDb>(sizeDto);
@@ -62,7 +82,19 @@ namespace BrandAPP.BLLayer.Services
 
             _database.Sizes.Create(size);
             _database.Save();
-            return true;
+        }
+
+        public void UpdateSize(int id, SizeDTO sizeDto)
+        {
+            if (_database.Sizes.AnyId(id))
+            {
+                _database.Sizes.Update(id, _mapper.Map<SizeDb>(sizeDto));
+                _database.Save();
+            }
+            else
+            {
+                throw new ValidationException($"There is no size with ID = {id}");
+            }
         }
 
         public ICollection<SizeDTO> GetBrandSizes(int brandId)
@@ -75,7 +107,35 @@ namespace BrandAPP.BLLayer.Services
             }
             else
             {
-                throw new ValidationException($"Brand with ID = {brandId} have no sizes", "");
+                throw new ValidationException($"Brand with ID = {brandId} have no sizes");
+            }
+        }
+
+        public void DeleteBrand(int brandId)
+        {
+            var brand = GetBrand(brandId);
+            if(brand != null)
+            {
+                _database.Brands.Delete(brandId);
+                _database.Save();
+            }
+            else
+            {
+                throw new ValidationException($"There is no brand with ID = {brandId}");
+            }
+        }
+
+        public void DeleteSize(int sizeId)
+        {
+            var size = _database.Sizes.Get(sizeId);
+            if (size != null)
+            {
+                _database.Sizes.Delete(sizeId);
+                _database.Save();
+            }
+            else
+            {
+                throw new ValidationException($"There is no size with ID = {sizeId}");
             }
         }
 

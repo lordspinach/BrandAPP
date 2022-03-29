@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace BrandAPP.DBLayer.Entities
 {
@@ -7,5 +8,6 @@ namespace BrandAPP.DBLayer.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual ICollection<SizeDb> Sizes { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

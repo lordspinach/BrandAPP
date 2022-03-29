@@ -22,7 +22,7 @@ namespace BrandAPP.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationContext();
+            services.AddApplicationContext(Configuration.GetConnectionString("DataDbConnection"));
             services.AddDbDependency();
             services.AddTransient<IBrandService, BrandService>();
             services.AddControllers();

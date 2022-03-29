@@ -33,7 +33,7 @@ namespace BrandAPP.API.Controllers
                 var brands = _mapper.Map<IEnumerable<BrandResponse>>(_brandService.GetBrands());
                 return Ok(brands);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return BadRequest(e.Message);
             }
@@ -55,7 +55,7 @@ namespace BrandAPP.API.Controllers
             }
         }
 
-        [HttpGet("find")]
+        [HttpGet("byName")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult GetByName([FromQuery] string name)
@@ -80,6 +80,38 @@ namespace BrandAPP.API.Controllers
             {
                 _brandService.CreateBrand(_mapper.Map<BrandDTO>(brand));
                 return Ok(new { Message = "Brand was succesfully created" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Update(int id, BrandUpdateRequest brand)
+        {
+            try
+            {
+                _brandService.UpdateBrand(id, _mapper.Map<BrandDTO>(brand));
+                return Ok(new { Message = "Brand was succesfully updated" });
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult Delete(int id)
+        {
+            try
+            {
+                _brandService.DeleteBrand(id);
+                return Ok(new { Message = "Brand was succesfully deleted" });
             }
             catch (Exception e)
             {

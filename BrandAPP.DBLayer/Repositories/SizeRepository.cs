@@ -24,7 +24,7 @@ namespace BrandAPP.DBLayer.Repositories
 
         public SizeDb Get(int id)
         {
-            return _context.Sizes.Find(id);
+            return _context.Sizes.Where(s => s.Id == id).FirstOrDefault();
         }
 
         public void Create(SizeDb size)
@@ -32,8 +32,9 @@ namespace BrandAPP.DBLayer.Repositories
             _context.Sizes.Add(size);
         }
 
-        public void Update(SizeDb size)
+        public void Update(int id, SizeDb size)
         {
+            size.Id = id;
             _context.Entry(size).State = EntityState.Modified;
         }
 
@@ -42,16 +43,24 @@ namespace BrandAPP.DBLayer.Repositories
             return _context.Sizes.Include(b => b.Brand).Where(predicate).ToList();
         }
 
+        public void Delete(int id)
+        {
+            var size = _context.Sizes.Find(id);
+            if (size != null)
+            {
+                _context.Entry(size).State = EntityState.Deleted;
+            }
+                
+        }
+
         public SizeDb FindByName(string name)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(int id)
+        public bool AnyId(int id)
         {
-            SizeDb size = _context.Sizes.Find(id);
-            if (size != null)
-                _context.Sizes.Remove(size);
+            return _context.Sizes.Any(s => s.Id == id);
         }
     }
 }

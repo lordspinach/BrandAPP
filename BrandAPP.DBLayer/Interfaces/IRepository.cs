@@ -10,7 +10,8 @@ namespace BrandAPP.DBLayer.Interfaces
         IEnumerable<T> Find(Func<T, Boolean> predicate);
         T FindByName(string name);
         void Create(T item);
-        void Update(T item);
+        void Update(int id, T item);
         void Delete(int id);
+        bool AnyId(int id);
     }
 }
